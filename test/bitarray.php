@@ -1,6 +1,7 @@
 <?php
 
-require( __DIR__ . "/../src/BitArray.php" );
+require( __DIR__ . "/../lib/SpectrumLib/BitArray.php" );
+
 
 // Test 1
 echo "\n--- Test 1: Instalize BitArray with a default size ---.\n\n";

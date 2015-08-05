@@ -1,12 +1,10 @@
 <?php
 
-namespace SpectrumLib\BitArray
-
 
 /**
  * Array of bits
  */
-class BitArray implements Countable, ArrayAccess{
+class BitArray implements \Countable, \ArrayAccess{
        
     private $size;
     private $data;
