@@ -83,7 +83,7 @@ class BitArray implements \Countable, \ArrayAccess{
      * Convert binary array to string representation
      */
     public function __toString(){ 
-        
+        return $this->toBinaryString();
     }
     
     public function count(){
@@ -129,26 +129,7 @@ class BitArray implements \Countable, \ArrayAccess{
     }
 
     public function offsetGet( $offset ){  
-        throw new exception( "Can't access bit directly." );
-        /*
-        if( $offset >= $this->size ){
-            throw new exception( "Offset:$offset is beyond the size of BitArray." );
-        }        
-        if( $value != 0 && $value != 1 ){
-            throw new exception( "Value must be 0, 1, true, or false." );
-        }
-        
-        $int_array_position = (int)( $offset / $this->max_bits  );
-        $bit_position = $offset % $this->max_bits ;
-        
-        if( $bit_position == 0 ){
-            $bit_on = ( $this->highest_bit >> $bit_position );   
-        }else{
-            $bit_on = ( $this->highest_bit >> $bit_position ) ^ ( $this->highest_bit >> ( $bit_position - 1 ) );          
-        }        
-        
-        return $this->data[ $int_array_position ] &= $bit_on;    
-        */
+        throw new exception( "Can't access bit directly." );        
     }
       
     
@@ -156,7 +137,8 @@ class BitArray implements \Countable, \ArrayAccess{
     /**
      * BitArray to binary string. 
      * The bits will be grouped into chars and inserted into a string,
-     * forming a binary string.
+     * forming a binary string. Bits beyond  BitArray size are 
+     * padded with 0(s).
      *
      * @return A binary string
      *
@@ -168,18 +150,22 @@ class BitArray implements \Countable, \ArrayAccess{
      */
     public function toBinaryString(){
         $bstr = '';
-        $chars = count( $this->data ) * PHP_INT_SIZE;
         
-        for( $i = 0; $i < $chars; ++$i ){
-            pack( 'C', 0 );
+        $sp_size = $this->size; // real machine size       
+        $remainder = $this->size % 8;        
+        if( $remainder != 0 ){
+            $sp_size = $this->size + 8 - $remainder;
         }
         
-        
-        foreach( $this->data as $int ){
-            $bstr .= pack( 'N', $int );
-        }
-        return $bstr;
-        
+        for( $i = 0; $i < $sp_size; $i += 8 ){
+            $int_array_position = (int)( $i / $this->max_bits );           
+              
+            $temp = $this->data[ $int_array_position ] >> ( $this->max_bits - ( $i + 8 ) );
+            $temp &= 255;
+            
+            $bstr .= pack( 'C', $temp );
+        }       
+        return $bstr;        
     }
     
     

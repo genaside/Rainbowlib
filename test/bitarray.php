@@ -72,6 +72,16 @@ echo "1. binary string of (100,16,98,1,0,78) results in \n";
 $bitarray->assignBinaryString( pack( "C*", 100, 16, 98, 1, 0, 78 ) );
 echo "got " . $bitarray->toBinaryRepersentaion()  . ".\n";
 
+// Test 5
+echo "\n--- Test 5: get a BitArray as a binary string repersentation ---.\n\n";
+
+$bitarray = new BitArray( 8 );
+
+$bitarray = new BitArray( [ 0, 0, 0, 0, 0, 0, 1, 1 ] );
+echo "1. convert to binary string and unpack.\n";
+var_dump( unpack( 'C*', $bitarray ) );
+
+
 
 
 
