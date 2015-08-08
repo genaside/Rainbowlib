@@ -53,9 +53,28 @@ echo "got " . $bitarray->toBinaryRepersentaion()  . ".\n";
 echo "3. turning bit on index 0 off \n";
 $bitarray[ 0 ] = false;
 echo "got " . $bitarray->toBinaryRepersentaion()  . ".\n";
+echo "4. toggle bit at index 5\n";
+$bitarray[ 5 ] = !$bitarray[ 5 ];
+echo "got " . $bitarray->toBinaryRepersentaion()  . ".\n";
+echo "5. toggle bit at index 5 again\n";
+$bitarray[ 5 ] = !$bitarray[ 5 ];
+echo "got " . $bitarray->toBinaryRepersentaion()  . ".\n";
 
 // Test 4
-echo "\n--- Test 4: Populate array of set size using binary string ---.\n\n";
+echo "\n--- Test 4: selecting a signle bit to see if its on off ---.\n\n";
+$bitarray = new BitArray( [ 1, 0, 1, 0, 1, 0, 1, 0 ] );
+// $bitarray[ 65 ]; // error
+echo "1. showing bit in index 0 \n";
+echo "{$bitarray[0]} \n";
+echo "2. showing bit in index 1 \n";
+echo "{$bitarray[1]} \n";
+echo "3. showing bit in index 2 \n";
+echo "{$bitarray[2]} \n";
+echo "4. showing bit in index 3 \n";
+echo "{$bitarray[3]} \n";
+
+// Test 5
+echo "\n--- Test 5: Populate array of set size using binary string ---.\n\n";
 
 $bitarray = new BitArray( 15 );
 echo "1. binary string of (255, 2) results in \n";

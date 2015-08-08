@@ -91,12 +91,8 @@ class BitArray implements \Countable, \ArrayAccess{
     }    
     
     public function offsetSet( $offset, $value ){
-        if( $offset >= $this->size ){
-            throw new exception( "Offset:$offset is beyond the size of BitArray." );
-        }        
-        if( $value != 0 && $value != 1 ){
-            throw new exception( "Value must be 0, 1, true, or false." );
-        }
+        $this->offsetTest( $offset );       
+        $this->valueTest( $value );
         
         $int_array_position = (int)( $offset / $this->max_bits  );
         $bit_position = $offset % $this->max_bits ;
@@ -117,7 +113,7 @@ class BitArray implements \Countable, \ArrayAccess{
     }
 
     public function offsetExists( $offset ){
-        if( $offset < $this->size ){
+        if( $offset < $this->size && $offset > -1 ){
             return true;
         }else{
             return false;
@@ -129,7 +125,42 @@ class BitArray implements \Countable, \ArrayAccess{
     }
 
     public function offsetGet( $offset ){  
-        throw new exception( "Can't access bit directly." );        
+        $this->offsetTest( $offset );
+        
+        $int_array_position = (int)( $offset / $this->max_bits  );
+        $bit_position = $offset % $this->max_bits ;
+        
+        if( $bit_position == 0 ){
+            $bit_on = ( $this->highest_bit >> $bit_position );   
+        }else{
+            $bit_on = ( $this->highest_bit >> $bit_position ) ^ ( $this->highest_bit >> ( $bit_position - 1 ) );          
+        }  
+        
+        if( ( $this->data[ $int_array_position ] & $bit_on ) != 0 ){         
+            return 1;
+        }else{
+            return 0;
+        }        
+    }
+    
+    private function offsetTest( $offset ){
+        $max_offset = $this->size;   
+        
+        if( !is_int( $offset ) ){
+            throw new exception( "Offset:$offset is not a valid interger." );
+        }
+        
+        if( $offset < 0 ){
+            throw new exception( "A negative offset is not allowed." );
+        }else if( $offset >= $this->size ){
+            throw new exception( "Offset:$offset is beyond the size of BitArray, which is $max_offset." );
+        }          
+    }
+    
+    private function valueTest( $value ){
+        if( $value != 0 && $value != 1 ){
+            throw new exception( "Value must be 1, 0, true, or false, $value doesn't is not compatible." );
+        }    
     }
       
     
@@ -271,6 +302,7 @@ class BitArray implements \Countable, \ArrayAccess{
     public function numberOfIntergersUsed(){        
         return count( $this->data );        
     }
+    
     
     
     
